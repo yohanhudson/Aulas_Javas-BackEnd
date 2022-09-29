@@ -1,0 +1,403 @@
+    CREATE TABLE usuario(
+    id SERIAL primary key,
+    nome varchar(45),
+    email varchar(45),
+    senha varchar(45)
+    );
+
+    
+    CREATE TABLE endereco(
+    id SERIAL primary key,
+        FK_usuario int,
+        foreign key (FK_usuario)
+        references usuario(id),
+        ruaNome varchar(100),
+        complemento varchar(45),
+        numero varchar(45)
+    );
+
+
+    CREATE TABLE cartao(
+    id SERIAL primary key,
+    FK_usuario int,
+    foreign key (FK_usuario)
+    references usuario(id),
+    nomeTitular varchar(45),
+    numero varchar(45),
+    cvc varchar(45),
+    dataVencimento date
+    );
+    
+
+CREATE TABLE loja(
+    id SERIAL primary key,
+        nome varchar(45),
+        endereco varchar(45),
+        cnpj varchar(14)
+    );
+    
+
+    CREATE TABLE mensalidade(
+    id SERIAL primary key,
+    tipo varchar(45),
+    descricao varchar(45),
+    dataHoraInicio timestamp without time zone,
+    dataHoraTermino timestamp without time zone,
+    FK_loja int,
+    foreign key (FK_loja)
+    references loja(id)
+    );
+    
+
+    CREATE TABLE produto(
+    id SERIAL primary key,
+        nome varchar(45),
+        descricao varchar(45),
+        valor decimal(1000, 2),
+        FK_loja int,
+        foreign key (FK_loja)
+        references loja(id)
+    );
+
+
+    CREATE TABLE perfil(
+    id SERIAL primary key,
+        nome varchar(45)
+    );
+
+
+    CREATE TABLE acesso(
+    id SERIAL primary key,
+        FK_usuario int,
+        foreign key (FK_usuario)
+        references usuario(id),
+        FK_perfil int,
+        foreign key (FK_perfil)
+        references perfil(id)
+    );
+
+
+    CREATE TABLE cupom(
+    id Serial primary key,
+    codigo varchar(45),
+    dataHoraInicio timestamp without time zone,
+    dataHoraTermino timestamp without time zone,
+    descricao varchar(45)
+    );
+
+
+    CREATE TABLE veiculo(
+    id SERIAL primary key,
+        marca varchar(45),
+        modelo varchar(45),
+        placa varchar(45),
+        FK_entregador int,
+        foreign key (FK_entregador)
+        references usuario(id)
+    );
+
+
+    CREATE TABLE pedido(
+    id SERIAL primary key,
+        FK_usuario int,
+        foreign key (FK_usuario)
+        references usuario(id),
+        FK_cupom int,
+        foreign key (FK_cupom)
+        references cupom(id),
+        total decimal (1000, 2),
+        FK_cartao int,
+        foreign key (FK_cartao)
+        references cartao(id),
+        FK_entregador int,
+        foreign key (FK_entregador)
+        references usuario(id),
+        TaxaRenda DECIMAL(1000, 2),
+        dataHora timestamp without time zone
+    );
+
+    CREATE TABLE produtoItem(
+    id SERIAL primary key,
+        FK_produto int,
+        foreign key (FK_produto)
+        references produto(id) ON DELETE CASCADE,
+        FK_pedido int,
+        foreign key (FK_pedido)
+        references pedido(id) ON DELETE CASCADE,
+        qtdProduto int,
+        valor DECIMAL(1000, 2)
+    );
+    
+     --  INSERTS --
+     
+     select * cartao;
+
+    INSERT INTO Usuario VALUES (1, 'Yohan Hudson', 'yohan.hudson@gmail.com', 'Teste123');
+    
+    INSERT INTO usuario VALUES (2, 'Jose Mariano', 'jose.mariano@gmail.com', 'wdfwdcsc');
+
+    SELECT * FROM usuario;
+    
+    INSERT INTO endereco values (1, 1, 'Av Paulista', 'Apartamento 5', '555');
+
+    INSERT INTO cartao VALUES (1, 1, 'Yohan Torquato Arcas Hudson', '6666666666666666', '999', '2023-12-1');
+
+    SELECT * FROM  cartao;
+
+    SELECT * FROM mensalidade;
+
+    INSERT INTO loja  VALUES (1, 'Bovinus', 'Rua Paulista 545', '12345678901234');
+
+    INSERT INTO mensalidade VALUES (1, 'Anual', 'Plano anual possui um desconto de 10%', '2022-05-06 00:00:00', '2023-05-06 00:00:00', 1);
+    
+    SELECT * FROM loja;
+
+    INSERT INTO produto VALUES (1, 'Especial do dia', 'Arro, Batata Frita e 2 carnes', 25, 1);
+
+    INSERT INTO produto VALUES (2, 'Especial da semana', 'secreto', 50, 1);
+
+    INSERT INTO produto VALUES (3, 'Especial Churrasco', 'Picanha no alho', 75, 1);
+
+    SELECT * FROM produto;
+    
+    SELECT * FROM produtoItem;
+
+    INSERT INTO cupom VALUES (1, '123452331312', '2022-09-06 00:00:00', '2022-10-06 00:00:00', 'desconto de 5 reais');
+
+    INSERT INTO pedido VALUES (1, 1, 1, 20, 1, 2, 5, '2022-09-06 11:16:00');
+    
+    INSERT INTO pedido VALUES (2, 1, 1, 30, 1, 2, 10, '2022-09-06 11:11:01');
+    
+    INSERT INTO pedido VALUES (3, 1, 1, 30, 1, 2, 10, '2022-09-06 11:11:01');
+    
+    INSERT INTO pedido VALUES (4, 1, 1, 50, 1, 2, 20, '2019-09-06 11:11:01');
+    
+    INSERT INTO pedido VALUES (5, 1, 1, 50, 1, 2, 20, '2019-09-06 11:11:01');
+    
+    INSERT INTO pedido VALUES (6, 1, 1, 75, 1, 2, 35, '2019-09-06 11:11:01');
+    
+    INSERT INTO pedido VALUES (7, 1, 1, 75, 1, 2, 35, '2019-09-06 11:11:01');
+    
+    INSERT INTO pedido VALUES (8, 1, 1, 75, 1, 2, 35, '2019-09-06 11:11:01');
+
+    SELECT * FROM pedido;
+    
+    SELECT * from cartao;
+    
+    INSERT INTO produtoItem (FK_produto, FK_pedido, qtdProduto, valor) VALUES (1, 1, 1, 20);
+  
+    INSERT INTO produtoItem (FK_produto, FK_pedido, qtdProduto, valor) VALUES (2, 2, 1, 30);
+    
+    INSERT INTO produtoItem (FK_produto, FK_pedido, qtdProduto, valor) VALUES (2, 3, 1, 75);
+    
+    INSERT INTO produtoItem (FK_produto, FK_pedido, qtdProduto, valor) VALUES (2, 4, 1, 30);
+    
+    INSERT INTO produtoItem (FK_produto, FK_pedido, qtdProduto, valor) VALUES (2, 5, 1, 50);
+    
+    INSERT INTO produtoItem (FK_produto, FK_pedido, qtdProduto, valor) VALUES (2, 6, 1, 50);
+    
+    INSERT INTO produtoItem (FK_produto, FK_pedido, qtdProduto, valor) VALUES (2, 7, 1, 75);
+    
+    INSERT INTO produtoItem (FK_produto, FK_pedido, qtdProduto, valor) VALUES (3, 8, 1, 75);
+
+    INSERT INTO perfil VALUES (1, 'Cliente');
+    
+    INSERT INTO perfil VALUES (2, 'Entregador');
+
+    INSERT INTO acesso (FK_usuario, FK_perfil) VALUES (1, 1);
+    
+    INSERT INTO acesso (FK_usuario, FK_perfil) VALUES (2, 2);
+    
+    INSERT INTO veiculo (marca, modelo, placa, FK_entregador) VALUES ('Yamaha', 'Dragstar', 'BB-23G2', 2);
+    
+    select * from usuario;
+    
+    SELECT * from usuario join acesso on usuario.id = acesso.FK_usuario
+    join perfil on perfil.id = acesso.FK_perfil;
+    
+    
+    
+    -- INDEX --
+
+    CREATE INDEX idx_usuario on usuario (nome, email);
+
+    CREATE INDEX idx_loja on loja (nome, endereco);
+
+    CREATE INDEX idx_pedido on  pedido (FK_usuario, dataHora, FK_cupom, total, FK_cartao, FK_entregador);
+
+
+
+-- FUNCTION --
+
+    CREATE OR REPLACE FUNCTION consultarRendaTotal() RETURNS numeric
+    AS $$
+    DECLARE
+    consulta numeric;
+    BEGIN
+    consulta = (SELECT SUM(pedido.taxaRenda) FROM pedido);
+    RETURN consulta;
+    END; $$
+    LANGUAGE PLPGSQL;
+
+    SELECT public.consultarRendaTotal();
+    
+    
+    CREATE OR REPLACE FUNCTION consultarResgateCupom(cupomInformado varchar, numeroID Integer) RETURNS TEXT
+    AS $$
+    DECLARE
+    consulta varchar;
+    BEGIN
+    consulta = (SELECT cupom.codigo AS "Codigo" FROM pedido join cupom on pedido.FK_cupom = cupom.id 
+                WHERE cupom.codigo = cupomInformado AND pedido.id = numeroID);            
+    IF consulta = cupomInformado THEN
+    RETURN 'Cupom ja foi usado por esse usuario';
+    ELSE
+    RETURN 'Cupom ainda não foi regastado';
+    END IF;
+    END; $$
+    LANGUAGE PLPGSQL;
+    
+    SELECT public.consultarResgateCupom('123452331312', 1);
+    
+    SELECT  * from pedido join cupon on pedido.FK_cupon = cupon.id;
+    
+    
+    CREATE OR REPLACE FUNCTION validarEmail(emailFornecido VARCHAR) RETURNS text
+    AS $$
+    DECLARE
+    emailLength int = (SELECT LENGTH(emailFornecido));
+    emailPosition int = (SELECT POSITION('@' IN emailFornecido));
+    emailPositionCom int = (SELECT POSITION('.com' IN emailFornecido));
+    BEGIN
+    IF emailLength > 3 AND emailPosition > 5 AND emailPositionCom > 5 THEN
+    RETURN 'EMAIL VAILIDO';
+    ELSE
+    RETURN 'EMAIL INVALIDO';
+    END IF;
+    END; $$
+    LANGUAGE PLPGSQL;
+    
+    SELECT public.validarEmail('yohan.hudson@gmail.com');
+    
+    
+    
+    
+    
+    -- PROCEDURE --
+    
+    CREATE OR REPLACE PROCEDURE alterarCVCDatavencimento(emailFornecido VARCHAR, senhaFornecida VARCHAR, 
+                                           numeroCartaoFornecido VARCHAR, 
+                                           cvcFornecido VARCHAR,
+                                           dataVencimentoFornecido DATE)
+    LANGUAGE plpgsql
+    AS $BODY$
+    DECLARE
+    consultarEmail  VARCHAR = (SELECT usuario.email FROM usuario where email = emailFornecido);
+    consultarSenha  VARCHAR = (SELECT usuario.senha FROM usuario where email = emailFornecido);
+    consultarCatao  VARCHAR = (SELECT cartao.numero FROM usuario join cartao on cartao.FK_usuario = usuario.id 
+                      WHERE numero = numeroCartaoFornecido);
+    consultarTamanhoCvc  VARCHAR = (SELECT LENGTH(cvcFornecido));
+    consultarData  DATE =  (SELECT cartao.dataVencimento FROM usuario 
+                      join cartao on cartao.FK_usuario = usuario.id 
+                      WHERE numero = numeroCartaoFornecido);
+    BEGIN
+    IF consultarEmail = emailFornecido  AND consultarSenha = senhaFornecida THEN
+    IF consultarTamanhoCvc = '3' AND dataVencimentoFornecido > consultarData THEN
+    UPDATE cartao SET cvc = cvcFornecido WHERE numero = numeroCartaoFornecido;
+    COMMIT;
+    UPDATE cartao SET dataVencimento = dataVencimentoFornecido WHERE numero = numeroCartaoFornecido;
+    COMMIT;
+    ELSE 
+    ROLLBACK;
+    END IF;
+    ELSE
+    ROLLBACK;
+    END IF;
+    END;
+    $BODY$
+    
+    CALL alterarCVCDatavencimento('yohan.hudson@gmail.com', 'Teste123', '6666666666666666', 
+                                  '262', '2025-01-01');
+    
+    SELECT * FROM usuario join cartao on cartao.FK_usuario = usuario.id;
+
+    
+
+    CREATE OR REPLACE PROCEDURE deletarPedidoAntigo()
+    LANGUAGE plpgsql
+    AS $BODY$
+    DECLARE
+    datahoraPassado DATE = (CURRENT_DATE - INTERVAL '1 year');
+    BEGIN
+    IF CURRENT_DATE > datahoraPassado THEN
+    DELETE FROM pedido where dataHora <= datahoraPassado;
+    COMMIT;
+    ELSE
+    ROLLBACK;
+    END IF;
+    END;
+    $BODY$
+
+    CALL deletarPedidoAntigo();
+    
+    SELECT * FROM pedido;
+    
+    SELECT * FROM produtoIten;
+   
+   
+   
+   
+    -- VIEW --
+
+    CREATE OR REPLACE VIEW vw_cliente AS
+    SELECT perfil.nome AS "Perfil", usuario.nome AS "Cliente", usuario.email, endereco.ruaNome, 
+    endereco.complemento, endereco.numero, produto.nome AS "Produto", produtoItem.valor AS "Valor Produto",
+    loja.nome AS "Loja", cupom.codigo AS "CUPON", pedido.total, cartao.nomeTitular AS "Nome Titular Cartão", 
+    cartao.numero AS "Cartao", cartao.cvc, cartao.dataVencimento
+    FROM loja JOIN produto on produto.FK_loja = loja.id
+    JOIN produtoItem on produtoItem.FK_produto = produto.id
+    JOIN pedido on produtoItem.FK_pedido = pedido.id
+    JOIN usuario on pedido.FK_usuario = usuario.id
+    JOIN endereco on usuario.id = endereco.FK_usuario
+    JOIN acesso on acesso.FK_usuario = usuario.id
+    JOIN perfil on acesso.FK_perfil = perfil.id
+    JOIN cupom on pedido.FK_cupom = cupom.id
+    JOIN cartao on cartao.FK_usuario = usuario.id;
+
+
+    CREATE OR REPLACE VIEW vw_lojasParceiras AS
+    SELECT loja.nome as "Loja", loja.endereco, produto.nome AS "Produto", produto.descricao as "Descricao", produto.valor as "Preço", pedido.total "Valor da compra", pedido.dataHora "Dia e hora da compra"
+    FROM loja JOIN produto on produto.FK_loja = loja.id
+    JOIN produtoItem on produtoItem.FK_produto = produto.id
+    JOIN pedido on produtoItem.FK_pedido = pedido.id;
+
+    CREATE OR REPLACE VIEW vw_produtosMaisCaros AS
+    SELECT Loja.nome as "Loja", produto.nome as "Produto", produto.descricao, produto.valor 
+    FROM loja join produto on loja.id = produto.FK_loja ORDER BY produto.valor DESC LIMIT 3;
+    
+    CREATE OR REPLACE VIEW vw_cliente_loja_entregador AS
+    SELECT perfil.nome AS "Perfil", usuario.nome AS "Cliente", usuario.email, endereco.ruaNome, 
+    endereco.complemento, endereco.numero, produto.nome AS "Produto", produtoItem.valor AS "Valor Produto",
+    loja.nome AS "Loja", cupom.codigo AS "CUPON", pedido.total, cartao.nomeTitular AS "Nome Titular Cartão", 
+    cartao.numero AS "Cartao", cartao.cvc, cartao.dataVencimento, entregador.nome AS "Nome Entregador",
+    veiculo.marca, veiculo.modelo
+    FROM loja JOIN produto on produto.FK_loja = loja.id
+    JOIN produtoItem on produtoItem.FK_produto = produto.id
+    JOIN pedido on produtoItem.FK_pedido = pedido.id
+    JOIN usuario on pedido.FK_usuario = usuario.id
+    JOIN endereco on usuario.id = endereco.FK_usuario
+    JOIN acesso on acesso.FK_usuario = usuario.id
+    JOIN perfil on acesso.FK_perfil = perfil.id
+    JOIN cupom on pedido.FK_cupom = cupom.id
+    JOIN cartao on cartao.FK_usuario = usuario.id
+    JOIN usuario AS entregador on pedido.FK_entregador = entregador.id
+    JOIN veiculo on veiculo.FK_entregador = entregador.id;
+    
+    SELECT * FROM vw_lojasParceiras;
+    
+    SELECT * FROM vw_produtosMaisCaros;
+    
+    SELECT * FROM vw_cliente;
+    
+    SELECT * FROM vw_cliente_loja_entregador;
+
